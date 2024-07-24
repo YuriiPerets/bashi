@@ -6,8 +6,8 @@ Examples: sw1, sw42, sw678 ...
 These identifiers are used in the test names, for example, to make it clear which test is testing 
 which rule.
 """
-from bashi.globals import *  # pylint: disable=wildcard-import,unused-wildcard-import
 import packaging.version as pkv
+from bashi.globals import * 
 from typing import Optional, IO
 from typeguard import typechecked
 from bashi.types import ParameterValueTuple
@@ -41,14 +41,12 @@ def software_dependency_filter(
     Returns:
         bool: True, if parameter-value-tuple is valid.
     """
+    
     for compiler in (HOST_COMPILER, DEVICE_COMPILER):
-        if (
-            HOST_COMPILER in row
-            and row[HOST_COMPILER].name == GCC
-            and row[HOST_COMPILER].version <= pkv.parse("6")
-            and UBUNTU == "20.04"
-        ):
-            return False
-
+        if compiler in row and row[compiler].name == GCC:
+            if row[compiler].version == pkv.parse("6"):
+                if UBUNTU in row and row[UBUNTU].version == pkv.parse("20.04"):
+                    return False
 
     return True
+    
